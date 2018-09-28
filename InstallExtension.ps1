@@ -45,7 +45,7 @@ $array | ForEach-Object {
     write-Host "ResourceGroup is " $vm_resourcegroup
     Write-Host "RID is"  $resourceID
 
-    #Set-AzureRmVMDiagnosticsExtension -ResourceGroupName $vm_resourcegroup -VMName $vm_name -DiagnosticsConfigurationPath $diagnosticsconfig_path
+    Set-AzureRmVMDiagnosticsExtension -ResourceGroupName $vm_resourcegroup -VMName $vm_name -DiagnosticsConfigurationPath $diagnosticsconfig_path
 
     
    }
