@@ -40,7 +40,8 @@ $array | ForEach-Object {
     $myxml.PublicConfig.StorageAccount = $storageaccount
     $myXML.Save("$diagnosticsconfig_path")
 
+	Write-Host "servername is " $vm_resourcegroup " and ResourceGroup is " $vm_name
     Set-AzureRmVMDiagnosticsExtension -ResourceGroupName $vm_resourcegroup -VMName $vm_name -DiagnosticsConfigurationPath $diagnosticsconfig_path
 
-    Write-Host "servername is " $VM " and ResourceGroup is " $RG
+   
    }
