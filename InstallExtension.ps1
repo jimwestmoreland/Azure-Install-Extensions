@@ -11,15 +11,15 @@
 ############################
 
 #Full Path to XML Template
-$diagnosticsconfig_path = "FULL PATH TO XML\NAME OF FILE.xml"
+$diagnosticsconfig_path = "C:\\xmltemplate.xml"
 
 #Specify the storage account
-$storageaccount = "ENTER STORAGE ACCOUNT"
+$storageaccount = "storageacctname"
 
 #############################
 #Import CSV Into Array
 #############################
-$array =Import-Csv -Path "C:\users\jimwest\Desktop\vmstlist.csv" -Delimiter ","
+$array =Import-Csv -Path "C:\\vmstlist.csv" -Delimiter ","
 
 
 $array | ForEach-Object {
@@ -30,17 +30,22 @@ $array | ForEach-Object {
     #Get the ResourceID for the VM to update XML
     #############################
     #Get the Resource ID
-    $resourceID = get-azurermresource -name <$vm_name> | ft -property resourceid
+    $resourceID = (get-AzureRMVM -Name $vm_name -ResourceGroupName $vm_resourcegroup | ft -Property id -HideTableHeaders | out-string).Trim()
+   
 
     ##############################
     #Update the XML template
     ##############################
     [xml]$myXML = Get-Content $diagnosticsconfig_path
-    $myXML.PublicConfig.WadCfg.DiagnosticMonitorConfiguration.Metrics.resourceid = $resourceid
+    $myXML.PublicConfig.WadCfg.DiagnosticMonitorConfiguration.Metrics.resourceid = $resourceid 
     $myxml.PublicConfig.StorageAccount = $storageaccount
     $myXML.Save("$diagnosticsconfig_path")
-	Write-Host "servername is " $vm_resourcegroup " and ResourceGroup is " $vm_name
-    Set-AzureRmVMDiagnosticsExtension -ResourceGroupName $vm_resourcegroup -VMName $vm_name -DiagnosticsConfigurationPath $diagnosticsconfig_path
 
-   
+    Write-Host "servername is " $vm_name 
+    write-Host "ResourceGroup is " $vm_resourcegroup
+    Write-Host "RID is"  $resourceID
+
+    #Set-AzureRmVMDiagnosticsExtension -ResourceGroupName $vm_resourcegroup -VMName $vm_name -DiagnosticsConfigurationPath $diagnosticsconfig_path
+
+    
    }
